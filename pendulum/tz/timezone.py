@@ -41,7 +41,7 @@ class Timezone(tzinfo):
 
     def __setstate__(self, state):
         self.__dict__.update(state)
-        tz = read(state['_name'], state['_extended'])
+        tz = read(state['_name'], state.get('_extended', True))
         self.__dict__['_transitions'] = tz.transitions
         
     @property
