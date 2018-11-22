@@ -30,9 +30,20 @@ class Timezone(tzinfo):
         tz = read(name, extend=extended)
 
         self._name = name
+        self._extended = extended
         self._transitions = tz.transitions
         self._hint = {True: None, False: None}
+    
+    def __getstate__(self):
+        state = self.__dict__.copy()
+        del(state['_transitions'])
+        return state
 
+    def __setstate__(self, state):
+        self.__dict__.update(state)
+        tz = read(state['_name'], state['_extended'])
+        self.__dict__['_transitions'] = tz.transitions
+        
     @property
     def name(self):  # type: () -> str
         return self._name
